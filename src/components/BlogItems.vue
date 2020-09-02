@@ -1,6 +1,6 @@
 <template>
     <div id="blogItems">
-        <div id="blogItem" v-for="(item,index) in blogitem" :key="index">
+        <div id="blogItem" v-for="(item) in blogitem" :key="item._id" @click="goBlog(item._id)">
             <div id="itemheadImg">
                 <img :src="item.headimg">
             </div>
@@ -30,7 +30,7 @@ export default {
                 method:'get'
             })
             .then(res=>{
-                this.blogitem=res.data.data
+                this.blogitem=res.data.data.reverse()
                 console.log(res.data.data)
             })
             .catch(error=>{
@@ -38,25 +38,14 @@ export default {
                 console.log('请求失败')})
             
     },
-    computed:{
-        currentdate:function(){
-            var date = new Date();
-            var seperator1 = "-";
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var strDate = date.getDate();
-            if (month >= 1 && month <= 9) {
-                month = "0" + month;
-            }
-            if (strDate >= 0 && strDate <= 9) {
-                strDate = "0" + strDate;
-            }
-            var currentdate = year + seperator1 + month + seperator1 + strDate;
-            return currentdate;
-        },
-        
-        
+    methods:{
+        goBlog(id){
+            this.$router.push({name:"BlogInfo"})
+          sessionStorage.setItem('blogid',id)
+            
+        }
     }
+    
 }
 </script>
 <style>

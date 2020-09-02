@@ -8,6 +8,7 @@ import Home from '../components/Home.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Personal from '../components/Personal.vue'
+import BlogInfo from '../components/BlogInfo.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -59,6 +60,14 @@ const originalPush = VueRouter.prototype.push
     components:{
       header:Header,
       main:Blog
+    }
+  },
+  {
+    path:'/bloginfo',
+    name:'BlogInfo',
+    components:{
+      header:Header,
+      main:BlogInfo
     }
   },
   {

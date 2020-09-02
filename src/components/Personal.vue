@@ -5,12 +5,11 @@
             <el-tabs v-model="activeName" @tab-click="handleClick" id="edit">
                 <el-tab-pane label="个人资料" name="first">
                     <div>
-                        <div id="nickenameupdate">
+                        <div id="nicknameupdate">
                             修改昵称：{{nickname}}
                             <el-input v-model="editnickname" id="nicknameinput"></el-input>
                             <el-button type="success" plain @click="editniknam">修改昵称</el-button>
                         </div>
-                        
                         <div class="block">
                             生日:{{birth}}<br>
                             <span class="demonstration"></span>
@@ -131,6 +130,7 @@ export default {
         birth(){
             return this.$store.state.birth
         }
+        
     }
 }
 </script>
@@ -144,7 +144,6 @@ export default {
         height: 80%;
         background: white;
         text-align: center;
-        padding: ;
     }
     #edit{
         display:flex;
@@ -159,5 +158,8 @@ export default {
         width: 100%;
         height: 100%;
     } */
-
+    #nicknameupdate{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
 </style>

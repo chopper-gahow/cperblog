@@ -21,18 +21,25 @@ export default {
     },
     methods:{
         upload(){
-            console.log('hahaha');
             var that = this;
             this.$axios({
                 method:'get',
                 url:'/blog/writeblog?title='+that.title+'&text='+that.text,
             })
             .then(res=>{
-                this.$message({
+                console.log(res);
+                if(res.data.code==200){
+                    this.$message({
                     showClose: true,
                     message: res.data.msg,
                     type: 'success'
                     });
+                    this.$router.push({ name: "Blog" });
+                }
+                
+                else{
+                    this.$message.error(res.data.msg);
+                }
             })
         }
     }
