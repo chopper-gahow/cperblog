@@ -22,7 +22,43 @@
                     {{text}}
                 </div>
             </div>
+            <div id="blogcomments">
+                <div id="commentinput">
+                    <div id="infoheadimg">
+                        <img :src="commentheadImg" alt="">
+                    </div>
+                    <div id="conmmentinputbox">
+                    <el-input
+                        type="textarea"
+                        placeholder="请输入评论内容"
+                        v-model="comment"
+                        maxlength="30"
+                        show-word-limit
+                        >
+                        </el-input>
+                    </div>
+                    <el-button id="commentbutton" type="danger" @click="writecomment">发表评论</el-button>
+                </div>
+                <div id="comment">
+                    <div style="font: 0px/0px sans-serif;clear: both;display: block"> </div>  
+
+                    <ul id="commentlist" >
+                        <li v-for="(item,index) in comments" :key="index">
+                            <div id="infoheadimg">
+                                <img :src="item.commerhead" alt="">
+                            </div>
+                            <div>
+                                {{item.commernickname}}:
+                            </div>
+                            <div>
+                            {{item.content}}
+                            </div>   
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+        
     </div>
 </template>
 <script>
@@ -32,71 +68,80 @@ export default {
     data(){
         return {
             id: sessionStorage.getItem("blogid"),
-            // title: sessionStorage.getItem('title'),
-            // text: sessionStorage.getItem('title'),
-            // writedate: sessionStorage.getItem('infodate'),
-            // writerickname: sessionStorage.getItem('infonickname'),
-            // headimg:sessionStorage.getItem('infoheading')
             title: '',
             text: '',
             writedate: '',
             writerickname: '',
-            headimg:''
-            // title: localStorage.getItem('title'),
-            // text: localStorage.getItem('title'),
-            // writedate: localStorage.getItem('infodate'),
-            // writerickname: localStorage.getItem('infonickname'),
-            // headimg:localStorage.getItem('infoheadimg')
-            // title:this.$store.state.blogtitle,
-            // text:this.$store.state.blogtext,
-            // writerickname:this.$store.state.blogwriter,
-            // headimg:this.$store.state.blogheadimg,
-            // writedate:this.$store.state.blogdate
+            headimg:'',
+            comment:'',
+            comments:[],
+            visitor:sessionStorage.getItem('username')
         }
+    },
+    computed:{
+        commentheadImg(){
+            return sessionStorage.getItem('headimg');
+        },
     },
 
     created(){
-        console.log('mounted');
-        console.log(this.id);
         var that = this;
         this.$axios({
             method:'get',
-            url:'/blog/findblogbyid?id='+that.id
+            url:'/blog/findblogbyid?id='+that.id+"&visitor="+that.visitor
         })
         .then(res=>{
-            console.log(res.data.data[0]);
-            // sessionStorage.setItem('infotitle',res.data.data[0].title)
-            // sessionStorage.setItem('infotext',res.data.data[0].text)
-            // sessionStorage.setItem('infonickname',res.data.data[0].writerickname)
-            // sessionStorage.setItem('infodate',res.data.data[0].writedate)
-            // sessionStorage.setItem('infoheading',res.data.data[0].headimg)
-            this.title = res.data.data[0].title
-            this.text = res.data.data[0].text
-            this.writedate = res.data.data[0].writedate
-            this.writerickname = res.data.data[0].writerickname
-            this.headimg = res.data.data[0].headimg
-            // localStorage.setItem('infotitle',res.data.data[0].title)
-            // localStorage.setItem('infotext',res.data.data[0].text)
-            // localStorage.setItem('infonickname',res.data.data[0].writerickname)
-            // localStorage.setItem('infodate',res.data.data[0].writedate)
-            // localStorage.setItem('infoheadimg',res.data.data[0].headimg)
+            console.log(res);
+            this.title = res.data.data.title
+            this.text = res.data.data.text
+            this.writedate = res.data.data.writedate
+            this.writerickname = res.data.data.writerickname
+            this.headimg = res.data.data.headimg
+            this.comments = res.data.data.comments
+            this.comments = res.data.data.comments;
         })
     },
-
+    methods:{
+        writecomment(){
+            var that = this
+            if((this.comment.indexOf(" ") >= 0 || this.comment == '')){this.$message.error('评论不能为空');}
+            else{
+            this.$axios({
+                method:'get',
+                url:'/blog/writecomment?id='+that.id+"&comment="+that.comment
+            })
+            .then(res=>{
+                console.log(res);
+                if(res.data.code !== 200){
+                    this.$message.error(res.data.msg);
+                }
+                else{
+                    location.reload()
+                }
+            })
+            }
+        }
+    }
 }
 </script>
 <style>
+
     #bloginfo{
         width: 77%;
-        height: 80%;
         display: flex;
         justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
     #blogcontent{
         width: 60%;
-        height: 700px;
-        background: white;
+        min-height: 85vh;
+        background: white; 
         padding: 20px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        /* overflow: auto; */
     }
     #bloghead{
         width: 100%;
@@ -142,6 +187,35 @@ export default {
         height: 100%;
     }
     #infoblogtext{
-        background: red;
+        flex: 1;
+        font-size: 1.4em;
+    }
+    #blogcomments{
+        width: 100%;
+
+
+    }
+    #commentinput{
+        display: flex;
+        justify-content: space-between;
+    }
+    #conmmentinputbox{
+        flex: 1;
+    }
+    #commentbutton{
+        height: 100%;
+        list-style: none;
+    }
+    #comment{
+        width: 100%;
+    }
+    #commentlist li{
+        height: 100px;
+        border-bottom: 1px #E8E8ED solid;
+        display: flex;
+        align-items: center; 
+    }
+    #commentlist li div{
+        margin-right: 10px;
     }
 </style>

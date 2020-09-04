@@ -14,9 +14,10 @@
   }
   #app{
     width: 100vw;
-    height: 100vh;
-    background:#BCE3ED;
-  }
+    min-height: 100vh;
+    background:skyblue;
+    overflow: auto;
+  } 
   .site-content{
     padding-left: 3vw;
     padding-right: 3vw;

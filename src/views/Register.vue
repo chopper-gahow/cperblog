@@ -7,8 +7,8 @@
             </div>
             <div id="zcinput">
                 <h2>注册账号</h2>
-                <el-input v-model="username" placeholder="请输入账号"></el-input>
-                <el-input v-model="password" placeholder="请输入密码"></el-input>
+                <el-input v-model="username" placeholder="请输入账号" prefix-icon="el-icon-user"></el-input>
+                <el-input v-model="password" placeholder="请输入密码" prefix-icon="el-icon-lock"></el-input>
             </div>
             <div>
             <el-button type="primary" @click="clkRegister" round id="btnzc" >注册账号</el-button>

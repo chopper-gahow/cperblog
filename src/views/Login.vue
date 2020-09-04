@@ -7,8 +7,8 @@
             </div>
             <div id="zcinput">
                 <h2>用户登陆</h2>
-                <el-input v-model="username" placeholder="请输入账号"></el-input>
-                <el-input type="password" v-model="password" placeholder="请输入密码"></el-input>
+                <el-input v-model="username" placeholder="请输入账号" prefix-icon="el-icon-user"></el-input>
+                <el-input show-password v-model="password" placeholder="请输入密码" prefix-icon="el-icon-user"></el-input>
             </div>
             <div>
             <el-button type="primary" @click="clkLogin" round id="btndl" @keyup.enter.native="clkLogin">登陆</el-button>

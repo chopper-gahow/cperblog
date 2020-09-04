@@ -45,7 +45,7 @@ export default {
     },
     methods:{
         editpwd(){
-            console.log('wcwq');
+            alert('别急还没写');
         },
         editniknam(){
             var that = this;
