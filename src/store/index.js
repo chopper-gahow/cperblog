@@ -12,12 +12,8 @@ export default new Vuex.Store({
     username:sessionStorage.getItem('username'),
     password:sessionStorage.getItem('password'),
     birth:sessionStorage.getItem('birth'),
-    isLogin:false,
-    // blogtitle:sessionStorage.getItem('infotitle'),
-    // blogtext:sessionStorage.getItem('infotext'),
-    // blogwriter:sessionStorage.getItem('infonickname'),
-    // blogheadimg:sessionStorage.getItem('infoheading'),
-    // blogdate:sessionStorage.getItem('infoheadimg')
+    isLogin:sessionStorage.getItem('isLogin'),
+    qiniutoken:sessionStorage.getItem('qiniutoken')
   },
 getters:{
   

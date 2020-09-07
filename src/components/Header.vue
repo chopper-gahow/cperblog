@@ -3,10 +3,12 @@
     <div class="site-header-warp">
       <div class="site-header-inside">
         <div class="site-branding">
-          <div v-if="isLogin">
+          <div id="loginhead" v-if="isLogin">
             <p class="profile">
               <router-link to="/index">
+              <div id="headimgd">
                 <img :src="headImg" alt />
+              </div>
               </router-link>
             </p>
             <div class="site-identify">
@@ -36,7 +38,7 @@
                 <a @click="goNote">撰写博客</a>
               </li>
               <li class="menu-item">
-                <a @click="goPersonal">个人中心</a>
+                <a @click="goPersonal">个人信息</a>
               </li>
               <li class="menu-item">
                 <a @click="goAbout">关于</a>
@@ -119,11 +121,16 @@ a {
   text-align: center;
   top: 0;
 }
-.profile img {
-  width: 100px;
-  height: 100px;
-  border: 2px solid #d4a259;
+#headimgd{
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
   border-radius: 50%;
+  border: 2px solid #d4a259;
+  margin: 0 auto;
+}
+.profile img {
+  width: 100%;
 }
 .site-identify {
   padding-bottom: 1.6em;

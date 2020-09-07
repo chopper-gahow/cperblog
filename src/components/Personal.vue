@@ -1,6 +1,6 @@
 <template>
     <div id="personalPage">
-        <div id="editbox">
+        <div v-if="isLogin" id="editbox">
             <h1>个人信息</h1>
             <el-tabs v-model="activeName" @tab-click="handleClick" id="edit">
                 <el-tab-pane label="个人资料" name="first">
@@ -23,12 +23,24 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="头像管理" name="second">
-                    <div>2</div>
+                    <el-upload
+                        class="avatar-uploader"
+                        action="http://upload-z2.qiniup.com"
+                        :data="postData"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload">
+                        <img id="img" v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img id="img" v-else :src="personalheadimg">
+                    </el-upload>
                 </el-tab-pane>
                 <el-tab-pane label="账号信息" name="third">
                     <div>3</div>
                 </el-tab-pane>
             </el-tabs>
+        </div>
+        <div v-else>
+            先登录，死鬼
         </div>
     </div>
 </template>
@@ -40,10 +52,55 @@ export default {
             editpassword:'',
             editnickname:'',
             editbirth:'',
-            activeName: 'first'
+            personalheadimg:this.$store.state.headimg,
+            activeName: 'first',
+            isLogin:sessionStorage.getItem('isLogin'),
+            imageUrl:'',
+            postData:{
+                token:this.$store.state.qiniutoken,
+                domain:'hcpr.s3-cn-south-1.qiniucs.com'
+            }
         }
     },
+    mounted(){
+        console.log(this.$store.state.qiniutoken);
+    },
     methods:{
+        handleAvatarSuccess(res, file) {
+            var that = this
+            this.imageUrl = URL.createObjectURL(file.raw);
+            this.$message({
+                showClose: true,
+                message: '上传成功',
+                type: 'success'
+            });
+            this.$axios({
+                method:"get",
+                url:'/personal/editheadimg?headimg=http://hchopper.top/'+res.hash,
+                
+            }).then(res=>{
+                this.$message({
+                showClose: true,
+                message: res.data.msg,
+                type: 'success',
+                });
+                sessionStorage.setItem('headimg',res.data.data.headimg)
+                that.$store.state.headimg=sessionStorage.getItem('headimg')
+                location.reload()
+            })
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        },
         editpwd(){
             alert('别急还没写');
         },
@@ -54,7 +111,6 @@ export default {
                 method:'get'
             })
             .then((res,err)=>{
-                console.log(res);
                 if(res.data.code == 200){
                     sessionStorage.setItem('nickname',res.data.data.nickname)
                     that.$store.state.nickname=sessionStorage.getItem('nickname')
@@ -141,7 +197,7 @@ export default {
     }
     #editbox{
         width: 100%;
-        height: 80%;
+        height: 1000%;
         background: white;
         text-align: center;
     }
@@ -150,16 +206,32 @@ export default {
         flex-direction: column;
         align-items: center;
     }
-    /* #personalheadimg{
-    width: 100px;
-    height: 100px;
-    }
-    #personalheadimg img{
-        width: 100%;
-        height: 100%;
-    } */
     #nicknameupdate{
         margin-top: 50px;
         margin-bottom: 50px;
     }
+.upload {
+  width: 600px;
+  margin: 0 auto;
+}
+.avatar-uploader .el-upload {
+  width: 300px;
+  height: 300px;
+  border: 2px dashed #ca1717;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+#img{
+    width: 100%;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

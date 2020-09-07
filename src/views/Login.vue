@@ -42,19 +42,20 @@ export default {
                 }
                 else if(res.config.url !== '/login/userLogin?username=&password='&& res.data !== 'no!'){
                     this.$router.push({ name: "Index" });
-                    // localStorage.clear()
-                    // localStorage.setItem('info',1)
-                    // localStorage['flag']=1
-                    // localStorage.setItem('flag',1)
-                    // sessionStorage.clear()
-                    // sessionStorage['userid']=JSON.stringify(res.data.cookie._id)
-                    // sessionStorage.setItem('userid',JSON.stringify(res.data.userInfo.id))                        
-                    // sessionStorage['token']=JSON.stringify(res.data.token)
                     this.$message({
                     showClose: true,
                     message: res.data.msg,
                     type: 'success'
                     });
+                    this.$axios({
+                        method:'get',
+                        url:'/token/cper/gettoken'
+                    })
+                    .then(res=>{
+                        this.$store.state.qiniutoken = res.data.token
+                        sessionStorage.setItem('qiniutoken',res.data.token) 
+                    })
+                    console.log();
                     this.$store.state.username=res.data.data.username
                     this.$store.state.password=res.data.data.password
                     this.$store.state.nickname=res.data.data.nickname
@@ -63,7 +64,7 @@ export default {
                     sessionStorage.setItem('username',res.data.data.username)
                     sessionStorage.setItem('password',res.data.data.password)
                     this.$store.state.isLogin=true
-                    sessionStorage.setItem('isLogin',this.$store.state.isLogin)
+                    sessionStorage.setItem('isLogin',true)
                     sessionStorage.setItem('headimg',res.data.data.headimg)
                     sessionStorage.setItem('nickname',res.data.data.nickname)
                     sessionStorage.setItem('birth',res.data.data.birth)
